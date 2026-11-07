@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+}
+
+group = 'dev.dstmode'
+version = mod_version
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.ow2.asm:asm:${asm_version}"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    // 兼容 1.7.10 起的全部 JVM
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}
+
+// fat jar：把 ASM 一并打进去，agent 必须自包含
+jar {
+    archiveBaseName = 'dstmode-agent'
+    archiveClassifier = ''
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'module-info.class'
+    manifest {
+        attributes(
+            'Premain-Class': 'dev.dstmode.agent.DstAgent',
+            'Agent-Class': 'dev.dstmode.agent.DstAgent',
+            'Can-Redefine-Classes': 'true',
+            'Can-Retransform-Classes': 'true',
+            'Implementation-Title': 'DST-Mode Agent',
+            'Implementation-Version': mod_version
+        )
+    }
+}
