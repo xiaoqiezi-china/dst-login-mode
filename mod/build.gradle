@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+// 1.21.1 的 Minecraft 与 NeoForge 都要求 Java 21
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    // NeoForged 官方 Maven 的镜像；官方源 maven.neoforged.net 在部分网络下不可达
+    maven {
+        name = 'NeoForgedMirror'
+        url = 'https://maven.creeperhost.net/'
+    }
+    maven {
+        name = 'Sponge'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+}
+
+neoForge {
+    version = project.neo_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    // NeoForge 的 userdev 依赖通常已经带上 Mixin（NeoForge 自身就依赖它）。
+    // 如果编译时提示找不到 org.spongepowered.asm.*，取消下面这行注释。
+    // compileOnly 'org.spongepowered:mixin:0.8.7'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
