@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "dstmode",
+  "version": "${version}",
+  "name": "帝释天模式",
+  "description": "支持自定义签发服务器凭据登录，同时保持正版玩家正常登录。",
+  "authors": ["帝释天"],
+  "license": "All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.dstmode.fabric.DstModeFabric"]
+  },
+  "mixins": ["dstmode.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  },
+  "recommends": {
+    "fabric-api": "*"
+  }
+}

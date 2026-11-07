@@ -1,0 +1,10 @@
+pluginManagement {
+    repositories {
+        maven { name = 'NeoForged'; url = 'https://maven.neoforged.net/releases/' }
+        maven { name = 'NeoForgedMirror'; url = 'https://maven.creeperhost.net/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'dstmode-neoforge-1.21.1'

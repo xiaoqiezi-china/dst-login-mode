@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.dstmode.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "dev.dstmode.mixin.DstMixinPlugin",
+  "refmap": "dstmode.refmap.json",
+  "mixins": [
+    "ServerLoginMixin",
+    "ChatEnforcementMixin"
+  ],
+  "client": [
+    "MinecraftProfileMixin",
+    "ClientHandshakeMixin",
+    "SkinManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
