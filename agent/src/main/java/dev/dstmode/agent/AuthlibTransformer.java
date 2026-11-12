@@ -136,7 +136,8 @@ final class AuthlibTransformer implements ClassFileTransformer {
 
         @Override
         public void visitLdcInsn(Object value) {
-            if (value instanceof String text) {
+            if (value instanceof String) {
+                String text = (String) value;
                 String replaced = rewriteUrl(text);
                 if (!replaced.equals(text)) {
                     changed[0] = true;

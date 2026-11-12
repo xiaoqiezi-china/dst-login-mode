@@ -14,17 +14,14 @@ dependencies {
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-    // 兼容 1.7.10 起的全部 JVM
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    // 1.16 及以下的客户端普遍跑 Java 8，agent 必须兼容到 8
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 17
+    options.release = 8
 }
 
 // fat jar：把 ASM 一并打进去，agent 必须自包含
@@ -46,4 +43,15 @@ jar {
             'Implementation-Version': mod_version
         )
     }
+}
+// ASM 必须重定位，否则与 Minecraft 自带的 ASM 在 classpath 上重复，Fabric 会直接拒绝启动
+tasks.register('relocateAsm', JavaExec) {
+    dependsOn tasks.named('jar')
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'dev.dstmode.agent.tool.Relocate'
+    args tasks.jar.archiveFile.get().asFile.absolutePath
+}
+
+tasks.named('assemble') {
+    dependsOn 'relocateAsm'
 }
